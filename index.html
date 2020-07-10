@@ -9,7 +9,7 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="/style.css">
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -71,10 +71,10 @@
                 toggle(modal);
             };
             const handleClickItem = (e) => {
-                const entrySearch = location.search;
-                const url = `${location.origin}?p=${e.currentTarget.dataset.itemSeq}`
+                const entryPath = location.pathname;
+                const url = `${location.origin}/p/${e.currentTarget.dataset.itemSeq}`
                 history.pushState(null, null, url);
-                if(!entrySearch) {
+                if(entryPath === '/') {
                     toggleModal();
                 }
             };
@@ -95,19 +95,18 @@
             };
 
             window.onpopstate = () => {
-                const entrySearch = location.search;
+                const entryPath = location.pathname;
                 const profile = doc.getElementById('profile');
                 const img = doc.getElementById('img');
-                if(!entrySearch) {
+                if(entryPath === '/') {
                     show(profile, img);
                     const modal = doc.getElementById('modal');
                     if(modal.classList.contains('show-on')) {
                         toggle(modal);
                     }
                 } else {
-                    const entryUrl = new URL(location.href);
-                    const params = new URLSearchParams(entryUrl.search);
-                    if(params.has('p')){
+                    const entryPath = location.pathname;
+                    if(entryPath !== '/'){
                         show(img, profile);
                     } else {
                         show(profile, img);
@@ -115,13 +114,12 @@
                 }
             };
             window.onload = () => {
-                const entrySearch = location.search;
-                if(!entrySearch) {
+                const entryPath = location.pathname;
+                if(entryPath === '/') {
                     toggle(doc.getElementById('profile'));
                 } else {
-                    const entryUrl = new URL(location.href);
-                    const params = new URLSearchParams(entryUrl.search);
-                    if(params.has('p')){
+                    const entryPath = location.pathname;
+                    if(entryPath !== '/'){
                         toggle(doc.getElementById('img'));
                     } else {
                         toggle(doc.getElementById('profile'));
