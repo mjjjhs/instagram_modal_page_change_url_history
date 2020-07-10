@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <header>헤더 영역이다.</header>
+        <main>
+            <div class="wrap">
+                <div id="profile" class="profile show-off"> 프로필 영역이다. </div>
+                <div id="img" class="img show-off">이미지 영역이다.</div>
+            </div>
+            <div class="content">
+                <div class="article-wrap">
+                    <div class="article" data-item-seq="1">이미지다.</div>
+                    <div class="article" data-item-seq="2">이미지다.</div>
+                    <div class="article" data-item-seq="3">이미지다.</div>
+                </div>
+                <div class="article-wrap">
+                    <div class="article" data-item-seq="4">이미지다.</div>
+                    <div class="article" data-item-seq="5">이미지다.</div>
+                    <div class="article" data-item-seq="6">이미지다.</div>
+                </div>
+                <div class="article-wrap">
+                    <div class="article" data-item-seq="7">이미지다.</div>
+                    <div class="article" data-item-seq="8">이미지다.</div>
+                    <div class="article" data-item-seq="9">이미지다.</div>
+                </div>
+                <div class="article-wrap">
+                    <div class="article" data-item-seq="10">이미지다.</div>
+                    <div class="article" data-item-seq="11">이미지다.</div>
+                    <div class="article" data-item-seq="12">이미지다.</div>
+                </div>
+                <div class="article-wrap">
+                    <div class="article" data-item-seq="13">이미지다.</div>
+                    <div class="article" data-item-seq="14">이미지다.</div>
+                    <div class="article" data-item-seq="15">이미지다.</div>
+                </div>
+            </div>
+        </main>
+        <div id="modal" class="show-off">
+            <div class="background"></div>
+            <div class="wrap">
+                <div class="content">
+                    <div class="img">이미지다.</div>
+                    <div class="reply">
+                        <div class="top"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            const doc = document;
+            const toggle = (el) => {
+                el.classList.toggle('show-off');
+                el.classList.toggle('show-on');
+            };
+            const toggleModal = () => {
+                const modal = doc.getElementById('modal');
+                toggle(modal);
+            };
+            const handleClickItem = (e) => {
+                const entrySearch = location.search;
+                const url = `${location.origin}?p=${e.currentTarget.dataset.itemSeq}`
+                history.pushState(null, null, url);
+                if(!entrySearch) {
+                    toggleModal();
+                }
+            };
+            const handleClickModal = (e) => {
+                if(e.target.classList.contains('background')) {
+                    const url = `${location.origin}`
+                    history.replaceState(null, null, url);
+                    toggleModal();
+                }
+            };
+            const show = (onEl, offEl) => {
+                if(onEl.classList.contains('show-off')) {
+                    toggle(onEl);
+                }
+                if(offEl.classList.contains('show-on')) {
+                    toggle(offEl);
+                }
+            };
+
+            window.onpopstate = () => {
+                const entrySearch = location.search;
+                const profile = doc.getElementById('profile');
+                const img = doc.getElementById('img');
+                if(!entrySearch) {
+                    show(profile, img);
+                    const modal = doc.getElementById('modal');
+                    if(modal.classList.contains('show-on')) {
+                        toggle(modal);
+                    }
+                } else {
+                    const entryUrl = new URL(location.href);
+                    const params = new URLSearchParams(entryUrl.search);
+                    if(params.has('p')){
+                        show(img, profile);
+                    } else {
+                        show(profile, img);
+                    }
+                }
+            };
+            window.onload = () => {
+                const entrySearch = location.search;
+                if(!entrySearch) {
+                    toggle(doc.getElementById('profile'));
+                } else {
+                    const entryUrl = new URL(location.href);
+                    const params = new URLSearchParams(entryUrl.search);
+                    if(params.has('p')){
+                        toggle(doc.getElementById('img'));
+                    } else {
+                        toggle(doc.getElementById('profile'));
+                    }
+                }
+                const article = [...doc.querySelectorAll('.article')];
+                article.map((item) => {
+                    item.addEventListener('click', handleClickItem);
+                });
+                doc.getElementById('modal').addEventListener('click', handleClickModal);
+            };
+        </script>
+    </body>
+</html>
